@@ -1,3 +1,5 @@
+// In this actions and reducer are created using plain redux code
+
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
 // Action creators
@@ -15,11 +17,11 @@ function visibilityFilter(state = "NOT_SET", action) {
   }
 }
 
-function todos(state = [], action) {  
+function todos(state = [], action) {
   switch (action.type) {
     case ADD_TODO.type:
       return state.concat([{ text: action.payload.text, completed: false }]);
-    case TOGGLE_TODO.type:        
+    case TOGGLE_TODO.type:
       return state.map((todo, index) =>
         action.payload.index === index
           ? { text: todo.text, completed: !todo.completed }
@@ -31,7 +33,6 @@ function todos(state = [], action) {
 }
 
 function todoApp(state = {}, action) {
-    debugger;
   return {
     todos: todos(state.todos, action),
     visibilityFilter: visibilityFilter(state.visibilityFilter, action),

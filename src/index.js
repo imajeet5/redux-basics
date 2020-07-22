@@ -1,8 +1,10 @@
 import { bugAdded, bugRemoved, bugResolved } from "./store/bugs";
 import { ADD_TODO, SET_VISIBILITY_FILTER, TOGGLE_TODO } from "./store/todo";
+import { projectAdded } from "./store/projects";
 import configureStore from "./store/configureStore";
 
 const store = configureStore();
+
 
 
 console.log(store.getState());
@@ -14,11 +16,21 @@ console.log(store.getState());
 store.dispatch(bugResolved({ id: 2 }));
 console.log(store.getState());
 
+
+
+
 store.dispatch(ADD_TODO({ text: "Go to swimming pool" }));
 
+store.dispatch(projectAdded({ name: "My redux project1" }));
 console.log(store.getState());
+store.dispatch(projectAdded({ name: "My redux project2" }));
+console.log(store.getState());
+store.dispatch(projectAdded({ name: "My redux project3" }));
+console.log(store.getState());
+
 store.dispatch(TOGGLE_TODO({ index: 0 }));
-store.dispatch(SET_VISIBILITY_FILTER({filter: 'SHOW_PENDING'}))
+// store.dispatch(SET_VISIBILITY_FILTER({ filter: "SHOW_PENDING" }));
+
 
 
 // store.dispatch(bugRemoved({ id: 1 }));
