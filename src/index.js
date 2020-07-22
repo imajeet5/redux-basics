@@ -1,16 +1,26 @@
 import { bugAdded, bugRemoved, bugResolved } from "./store/bugs";
+import { ADD_TODO, SET_VISIBILITY_FILTER, TOGGLE_TODO } from "./store/todo";
 import configureStore from "./store/configureStore";
 
 const store = configureStore();
 
-store.dispatch(bugAdded("Bug 123"));
-
-store.dispatch(bugAdded("Bug 456"));
-
-store.dispatch(bugResolved(2));
 
 console.log(store.getState());
+store.dispatch(bugAdded({ description: "Bug 123" }));
 
-store.dispatch(bugRemoved(1));
+store.dispatch(bugAdded({ description: "Bug 456" }));
+console.log(store.getState());
+
+store.dispatch(bugResolved({ id: 2 }));
+console.log(store.getState());
+
+store.dispatch(ADD_TODO({ text: "Go to swimming pool" }));
+
+console.log(store.getState());
+store.dispatch(TOGGLE_TODO({ index: 0 }));
+store.dispatch(SET_VISIBILITY_FILTER({filter: 'SHOW_PENDING'}))
+
+
+// store.dispatch(bugRemoved({ id: 1 }));
 
 console.log(store.getState());
