@@ -2,12 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 let lastId = 0;
 const slice = createSlice({
-  name: "projects",
+  name: "users",
   initialState: [],
   reducers: {
     // action => action handler
-    projectAdded: (projects, action) => {       
-      projects.push({
+    userAdded: (users, action) => {       
+      users.push({
         id: ++lastId,
         name: action.payload.name,
       });
@@ -15,5 +15,5 @@ const slice = createSlice({
   },
 });
 
-export const { projectAdded } = slice.actions;
+export const { userAdded } = slice.actions;
 export default slice.reducer;
