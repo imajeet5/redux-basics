@@ -5,11 +5,13 @@ import {
   getUnresolvedBugs,
   assignBugsToUser,
   getBugsByUser,
+  loadBugs,
 } from "./store/bugs";
 import { ADD_TODO, SET_VISIBILITY_FILTER, TOGGLE_TODO } from "./store/todo";
 import { projectAdded } from "./store/projects";
 import configureStore from "./store/configureStore";
 import { userAdded } from "./store/users";
+import * as apiActions from "./store/api";
 
 const store = configureStore();
 
@@ -26,6 +28,17 @@ store.dispatch((dispatchFunction, getState) => {
     console.log(getState());
   }, 1000);
 });
+
+const api_actions = {
+  type: "apiCallBegan",
+  payload: {
+    url: "/bugs",
+    onSuccess: "bugsReceived",
+    onError: "apiRequestFailed",
+  },
+};
+
+store.dispatch(loadBugs());
 
 store.dispatch({
   type: "error",

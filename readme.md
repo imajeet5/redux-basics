@@ -86,6 +86,8 @@ We need to put code with side effect like api call, dom manipulation in action c
 
 ```js
 const actionCreator = () => (dispatch) => {
-  
+  // Call api
+  // Resolved: dispatch(success)
+  // Rejected: dispatch(error)
 };
 ```

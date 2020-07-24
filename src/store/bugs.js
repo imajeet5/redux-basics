@@ -2,33 +2,46 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
+import { apiCallBegan } from "./api";
 
 let lastId = 0;
 
 // internally this function will call two function, create action with the same name specified and create reducers
+// using name: "bugs" will prefix name before every action like, bugs/bugsReceived, bugs/bugAdded,etc.
 const slice = createSlice({
   name: "bugs",
-  initialState: [],
+  initialState: {
+    list: [],
+    loading: false,
+    lastFetch: null,
+  },
   reducers: {
+    bugsRequested: (bugs, action) => {
+      bugs.loading = true;
+    },
+    bugsReceived: (bugs, action) => {
+      bugs.list.push(...action.payload);
+      bugs.loading = false;
+    },
     // actions => action handlers
     bugAdded: (bugs, action) => {
-      bugs.push({
+      bugs.list.push({
         id: ++lastId,
         description: action.payload.description,
         resolve: false,
       });
     },
     bugResolved: (bugs, action) => {
-      const index = bugs.findIndex((bug) => bug.id === action.payload.id);
-      bugs[index].resolve = true;
+      const index = bugs.list.findIndex((bug) => bug.id === action.payload.id);
+      bugs.list[index].resolve = true;
     },
     bugRemoved: (bugs, action) => {
-      bugs.filter((bug) => bug.id !== action.payload.id);
+      bugs.list.filter((bug) => bug.id !== action.payload.id);
     },
     assignBugsToUser: (bugs, actions) => {
       const { bugId, userId } = actions.payload;
-      const index = bugs.findIndex((bug) => bug.id === bugId);
-      bugs[index].userId = userId;
+      const index = bugs.list.findIndex((bug) => bug.id === bugId);
+      bugs.list[index].userId = userId;
     },
   },
 });
@@ -38,9 +51,23 @@ export const {
   bugRemoved,
   bugResolved,
   assignBugsToUser,
+  bugsReceived,
+  bugsRequested,
 } = slice.actions;
 
 export default slice.reducer;
+
+// Action Creator
+const url = "/bugs";
+
+export const loadBugs = () => {
+  debugger
+ return apiCallBegan({
+    url,
+    onStart: bugsRequested.type,
+    onSuccess: bugsReceived.type,
+  });
+};
 
 // Selector
 // export const getUnresolvedBugs = (state) =>
@@ -53,11 +80,11 @@ export default slice.reducer;
 // in this if the list of bugs passed to the second function is not changed, this selector will return the result from cache
 export const getUnresolvedBugs = createSelector(
   (state) => state.entities.bugs,
-  (bugs) => bugs.filter((bug) => !bug.resolve)
+  (bugs) => bugs.list.filter((bug) => !bug.resolve)
 );
 
 export const getBugsByUser = (userId) =>
   createSelector(
     (state) => state.entities.bugs,
-    (bugs) => bugs.filter((bug) => bug.userId === userId)
+    (bugs) => bugs.list.filter((bug) => bug.userId === userId)
   );
