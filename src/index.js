@@ -13,9 +13,24 @@ import { userAdded } from "./store/users";
 
 const store = configureStore();
 
-console.log(store.getState());
+// We sometime want to dispatch function
+store.dispatch((dispatchFunction, getState) => {
+  // Call an API
+  // When the promise is resolved => dispatch()
+  // If the promise is rejected =>  dispatch error
+  // We can give store the ability to dispatch functions by writing a middleware function;
+
+  setTimeout(() => {
+    console.log("%cThis is a yellow text", "color:yellow");
+    dispatchFunction(bugAdded({ description: "Bug from the api" }));
+    console.log(getState());
+  }, 1000);
+
+ 
+});
 
 store.dispatch(userAdded({ name: "User 1" }));
+console.log(store.getState());
 store.dispatch(userAdded({ name: "User 2" }));
 store.dispatch(userAdded({ name: "User 3" }));
 
