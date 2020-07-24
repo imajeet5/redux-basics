@@ -19,17 +19,16 @@ const slice = createSlice({
     bugsRequested: (bugs, action) => {
       bugs.loading = true;
     },
+    bugsRequestFailed: (bugs, action) => {
+      bugs.loading = false;
+    },
     bugsReceived: (bugs, action) => {
       bugs.list.push(...action.payload);
       bugs.loading = false;
     },
     // actions => action handlers
     bugAdded: (bugs, action) => {
-      bugs.list.push({
-        id: ++lastId,
-        description: action.payload.description,
-        resolve: false,
-      });
+      bugs.list.push(action.payload);
     },
     bugResolved: (bugs, action) => {
       const index = bugs.list.findIndex((bug) => bug.id === action.payload.id);
@@ -53,6 +52,7 @@ export const {
   assignBugsToUser,
   bugsReceived,
   bugsRequested,
+  bugsRequestFailed,
 } = slice.actions;
 
 export default slice.reducer;
@@ -60,14 +60,19 @@ export default slice.reducer;
 // Action Creator
 const url = "/bugs";
 
-export const loadBugs = () => {
-  debugger
- return apiCallBegan({
+export const loadBugs = () =>
+  apiCallBegan({
     url,
     onStart: bugsRequested.type,
     onSuccess: bugsReceived.type,
+    onError: bugsRequestFailed.type,
   });
-};
+export const addBug = (bug) => apiCallBegan({
+  url, 
+  method: "post",
+  data: bug,
+  onSuccess: bugAdded.type
+});
 
 // Selector
 // export const getUnresolvedBugs = (state) =>
