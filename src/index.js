@@ -25,8 +25,11 @@ store.dispatch((dispatchFunction, getState) => {
     dispatchFunction(bugAdded({ description: "Bug from the api" }));
     console.log(getState());
   }, 1000);
+});
 
- 
+store.dispatch({
+  type: "error",
+  payload: { message: "An error occurred" },
 });
 
 store.dispatch(userAdded({ name: "User 1" }));

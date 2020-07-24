@@ -78,3 +78,14 @@ export default store;
 ```
 
 To set the store state we have to dispatch an action. That action will pass through the reducers and state will be updated by the reducers
+
+### Redux Thunk
+
+With the thunk middleware we can dispatch functions and this allows us to execute code that causes side-effect, like calling api. As we are not suppose to call api in reducers as reducer should be pure,they should get the current state and return the new state.
+We need to put code with side effect like api call, dom manipulation in action creators. With the use of **THUNK** middleware we can also return a function from our middleware, and this function is where we encapsulate code with side-effects.
+
+```js
+const actionCreator = () => (dispatch) => {
+  
+};
+```
