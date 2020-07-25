@@ -4,8 +4,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { createSelector } from "reselect";
 import { apiCallBegan } from "../actions/api";
 
-let lastId = 0;
-
 // internally this function will call two function, create action with the same name specified and create reducers
 // using name: "bugs" will prefix name before every action like, bugs/bugsReceived, bugs/bugAdded,etc.
 const slice = createSlice({
@@ -30,6 +28,7 @@ const slice = createSlice({
     bugAdded: (bugs, action) => {
       bugs.list.push(action.payload);
     },
+    // resolveBug (command) -> bugResolved (event)
     bugResolved: (bugs, action) => {
       const index = bugs.list.findIndex((bug) => bug.id === action.payload.id);
       bugs.list[index].resolve = true;
@@ -38,14 +37,14 @@ const slice = createSlice({
       bugs.list.filter((bug) => bug.id !== action.payload.id);
     },
     assignBugsToUser: (bugs, actions) => {
-      const { bugId, userId } = actions.payload;
-      const index = bugs.list.findIndex((bug) => bug.id === bugId);
+      const { id, userId } = actions.payload;
+      const index = bugs.list.findIndex((bug) => bug.id === id);     
       bugs.list[index].userId = userId;
     },
   },
 });
 
-export const {
+const {
   bugAdded,
   bugRemoved,
   bugResolved,
@@ -67,12 +66,30 @@ export const loadBugs = () =>
     onSuccess: bugsReceived.type,
     onError: bugsRequestFailed.type,
   });
-export const addBug = (bug) => apiCallBegan({
-  url, 
-  method: "post",
-  data: bug,
-  onSuccess: bugAdded.type
-});
+export const addBug = (bug) =>
+  apiCallBegan({
+    url,
+    method: "post",
+    data: bug,
+    onSuccess: bugAdded.type,
+  });
+
+export const resolveBug = (id) =>
+  apiCallBegan({
+    // /bugs;  PATCH /bugs/1
+    url: url + "/" + id,
+    method: "patch",
+    data: { resolved: true },
+    onSuccess: bugResolved.type,
+  });
+
+export const bugAssignedToUser = (bugId, userId) =>
+  apiCallBegan({
+    url: url + "/" + bugId,
+    method: "patch",
+    data: { userId },
+    onSuccess: assignBugsToUser.type,
+  });
 
 // Selector
 // export const getUnresolvedBugs = (state) =>

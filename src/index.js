@@ -1,14 +1,14 @@
-import {
-  bugAdded,
-  bugRemoved,
-  bugResolved,
-  getUnresolvedBugs,
-  assignBugsToUser,
-  getBugsByUser,
+import { 
   loadBugs,
   addBug,
+  resolveBug,
+  bugAssignedToUser,
 } from "./store/entities/bugs";
-import { ADD_TODO, SET_VISIBILITY_FILTER, TOGGLE_TODO } from "./store/entities/todo";
+import {
+  ADD_TODO,
+  SET_VISIBILITY_FILTER,
+  TOGGLE_TODO,
+} from "./store/entities/todo";
 import { projectAdded } from "./store/entities/projects";
 import configureStore from "./store/configureStore";
 import { userAdded } from "./store/entities/users";
@@ -29,10 +29,18 @@ const store = configureStore();
 //   }, 1000);
 // });
 
-
+// In our UI layer we should dispatch the action that have the notion of command, and not expose the internals. 
 
 store.dispatch(loadBugs());
 store.dispatch(addBug({ description: "bug from redux" }));
+
+setTimeout(() => {
+  store.dispatch(resolveBug(1));
+}, 1000);
+
+setTimeout(() => {
+  store.dispatch(bugAssignedToUser(1, 4));
+}, 2000);
 
 // store.dispatch({
 //   type: "error",
