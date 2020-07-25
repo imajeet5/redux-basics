@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as actions from "../api";
+import * as actions from "../actions/api";
 
 const api = ({ dispatch }) => (next) => async (action) => {
   // we want to send any action type that pass through this middleware to the next middleware then reducer to handle

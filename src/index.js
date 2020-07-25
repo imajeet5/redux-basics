@@ -7,11 +7,11 @@ import {
   getBugsByUser,
   loadBugs,
   addBug,
-} from "./store/bugs";
-import { ADD_TODO, SET_VISIBILITY_FILTER, TOGGLE_TODO } from "./store/todo";
-import { projectAdded } from "./store/projects";
+} from "./store/entities/bugs";
+import { ADD_TODO, SET_VISIBILITY_FILTER, TOGGLE_TODO } from "./store/entities/todo";
+import { projectAdded } from "./store/entities/projects";
 import configureStore from "./store/configureStore";
-import { userAdded } from "./store/users";
+import { userAdded } from "./store/entities/users";
 
 const store = configureStore();
 
